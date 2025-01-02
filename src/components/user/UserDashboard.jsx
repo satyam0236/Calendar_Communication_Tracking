@@ -9,13 +9,16 @@ import { useAdmin } from '../../contexts/AdminContext';
 const UserDashboard = () => {
   const [activeView, setActiveView] = useState('grid');
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedCompany, setSelectedCompany] = useState(null);
-  const { companies, communications, getNextScheduledCommunication } = useAdmin();
+  const [selectedCompanies, setSelectedCompanies] = useState([]);
+  const { companies, getNextScheduledCommunication } = useAdmin();
+  const [sortConfig, setSortConfig] = useState({ key: 'name', direction: 'asc' });
+  const [filterText, setFilterText] = useState('');
+  const [acknowledgedNotifications, setAcknowledgedNotifications] = useState(new Set());
 
   // Calculate overdue and due today communications
   const getDueStatus = () => {
-    const overdue = [];
-    const dueToday = [];
+    let overdue = 0;
+    let dueToday = 0;
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
@@ -27,60 +30,79 @@ const UserDashboard = () => {
       dueDate.setHours(0, 0, 0, 0);
 
       if (dueDate < today) {
-        overdue.push(company.id);
+        overdue++;
       } else if (dueDate.getTime() === today.getTime()) {
-        dueToday.push(company.id);
+        dueToday++;
       }
     });
 
     return { overdue, dueToday };
   };
 
-  // Cache due status calculations
-  const dueStatus = useMemo(() => getDueStatus(), [companies, getNextScheduledCommunication]);
-
-  // Add notification acknowledgment
-  const [acknowledgedNotifications, setAcknowledgedNotifications] = useState(new Set());
-
-  const handleAcknowledgeNotification = (companyId) => {
+  const handleAcknowledgeAll = () => {
+    const { overdue, dueToday } = getDueStatus();
     setAcknowledgedNotifications(prev => {
       const newSet = new Set(prev);
-      newSet.add(companyId);
+      [...overdue, ...dueToday].forEach(id => newSet.add(id));
       return newSet;
     });
   };
 
-  // Filter notifications for display
-  const activeNotifications = useMemo(() => {
-    const { overdue, dueToday } = dueStatus;
-    return {
-      overdue: overdue.filter(id => !acknowledgedNotifications.has(id)),
-      dueToday: dueToday.filter(id => !acknowledgedNotifications.has(id))
-    };
-  }, [dueStatus, acknowledgedNotifications]);
-
-  const handleLogCommunication = (company) => {
-    setSelectedCompany(company);
+  const handleLogCommunication = (companyOrCompanies) => {
+    if (Array.isArray(companyOrCompanies)) {
+      // If receiving array of IDs (from CompanyGrid)
+      if (typeof companyOrCompanies[0] === 'string' || typeof companyOrCompanies[0] === 'number') {
+        setSelectedCompanies(companyOrCompanies);
+      } else {
+        // If receiving array of company objects (from CalendarView)
+        setSelectedCompanies(companyOrCompanies.map(c => c.id));
+      }
+    } else {
+      // Single company case
+      setSelectedCompanies([companyOrCompanies.id]);
+    }
     setIsModalOpen(true);
   };
 
+  const handleSort = (key) => {
+    setSortConfig(prev => ({
+      key,
+      direction: prev.key === key && prev.direction === 'asc' ? 'desc' : 'asc'
+    }));
+  };
+
+  // Cache due status calculations
+  const dueStatus = useMemo(() => getDueStatus(), [
+    companies,
+    getNextScheduledCommunication,
+    acknowledgedNotifications
+  ]);
+
   return (
     <div className="space-y-6">
-      {/* Top Bar with Notifications and View Toggle */}
+      {/* Top Bar with Notifications, Filters, and View Toggle */}
       <div className="flex justify-between items-center">
         <div className="flex items-center space-x-4">
           <NotificationBadge
-            overdue={activeNotifications.overdue.length}
-            dueToday={activeNotifications.dueToday.length}
+            overdue={dueStatus.overdue.length}
+            dueToday={dueStatus.dueToday.length}
+            onAcknowledgeAll={handleAcknowledgeAll}
           />
+          <div className="relative">
+            <input
+              type="text"
+              placeholder="Filter companies..."
+              className="px-4 py-2 border rounded-lg"
+              value={filterText}
+              onChange={(e) => setFilterText(e.target.value)}
+            />
+          </div>
         </div>
         <div className="flex items-center space-x-2">
           <button
             onClick={() => setActiveView('grid')}
             className={`px-4 py-2 rounded ${
-              activeView === 'grid'
-                ? 'bg-blue-600 text-white'
-                : 'bg-white text-gray-600'
+              activeView === 'grid' ? 'bg-blue-600 text-white' : 'bg-white text-gray-600'
             }`}
           >
             Grid View
@@ -88,9 +110,7 @@ const UserDashboard = () => {
           <button
             onClick={() => setActiveView('calendar')}
             className={`px-4 py-2 rounded ${
-              activeView === 'calendar'
-                ? 'bg-blue-600 text-white'
-                : 'bg-white text-gray-600'
+              activeView === 'calendar' ? 'bg-blue-600 text-white' : 'bg-white text-gray-600'
             }`}
           >
             Calendar View
@@ -100,7 +120,15 @@ const UserDashboard = () => {
 
       {/* Main Content */}
       {activeView === 'grid' ? (
-        <CompanyGrid onLogCommunication={handleLogCommunication} />
+        <CompanyGrid
+          onLogCommunication={handleLogCommunication}
+          sortConfig={sortConfig}
+          onSort={handleSort}
+          filterText={filterText}
+          selectedCompanies={selectedCompanies}
+          setSelectedCompanies={setSelectedCompanies}
+          dueStatus={dueStatus}
+        />
       ) : (
         <CalendarView onLogCommunication={handleLogCommunication} />
       )}
@@ -108,8 +136,11 @@ const UserDashboard = () => {
       {/* Log Communication Modal */}
       <LogCommunicationModal
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        company={selectedCompany}
+        onClose={() => {
+          setIsModalOpen(false);
+          setSelectedCompanies([]);
+        }}
+        companies={companies.filter(c => selectedCompanies.includes(c.id))}
       />
     </div>
   );

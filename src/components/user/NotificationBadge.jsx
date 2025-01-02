@@ -1,34 +1,82 @@
 // src/components/user/NotificationBadge.jsx
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import { BellIcon } from '@heroicons/react/24/outline';
 
-const NotificationBadge = ({ overdue, dueToday }) => {
+const NotificationBadge = ({ overdue, dueToday, onAcknowledgeAll }) => {
+  const [isOpen, setIsOpen] = useState(false);
   const total = overdue + dueToday;
+  const dropdownRef = useRef(null);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   return (
-    <div className="flex items-center space-x-4">
-      {total > 0 && (
-        <div className="relative">
-          <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+    <div className="relative" ref={dropdownRef}>
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="relative p-2 text-gray-600 hover:text-gray-900"
+      >
+        <span className="sr-only">View notifications</span>
+        <BellIcon className="h-6 w-6" />
+        {total > 0 && (
+          <span className="absolute top-0 right-0 -mt-1 -mr-1 px-2 py-1 text-xs font-bold leading-none text-white bg-red-500 rounded-full">
             {total}
           </span>
-          <button className="p-2 text-gray-600 hover:text-gray-800">
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
-                d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-              />
-            </svg>
-          </button>
+        )}
+      </button>
+
+      {isOpen && (
+        <div
+          className="fixed right-4 mt-2 w-80 bg-white rounded-lg shadow-lg"
+          style={{
+            zIndex: 9999,
+            maxHeight: 'calc(100vh - 100px)',
+            overflowY: 'auto'
+          }}
+        >
+          <div className="p-4">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-medium">Notifications</h3>
+              {total > 0 && (
+                <button
+                  onClick={() => {
+                    onAcknowledgeAll();
+                    setIsOpen(false);
+                  }}
+                  className="text-sm text-blue-600 hover:text-blue-800"
+                >
+                  Acknowledge All
+                </button>
+              )}
+            </div>
+
+            {total === 0 ? (
+              <p className="text-gray-500">No pending notifications</p>
+            ) : (
+              <div className="space-y-4">
+                {overdue > 0 && (
+                  <div className="text-red-600">
+                    {overdue} overdue communication{overdue !== 1 && 's'}
+                  </div>
+                )}
+                {dueToday > 0 && (
+                  <div className="text-yellow-600">
+                    {dueToday} communication{dueToday !== 1 && 's'} due today
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
         </div>
-      )}
-      {overdue > 0 && (
-        <span className="text-red-600 text-sm">
-          {overdue} overdue
-        </span>
-      )}
-      {dueToday > 0 && (
-        <span className="text-yellow-600 text-sm">
-          {dueToday} due today
-        </span>
       )}
     </div>
   );
