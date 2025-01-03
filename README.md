@@ -105,18 +105,19 @@ json
 
 ## Project Structure
 src/
-├── components/
-│ ├── admin/
-│ │ ├── AdminDashboard.jsx
-│ │ ├── CompanyManagement/
-│ │ └── CommunicationMethods/
-│ ├── user/
-│ │ ├── UserDashboard.jsx
-│ │ ├── CalendarView.jsx
-│ │ └── CompanyGrid.jsx
-│ └── shared/
-├── contexts/
-└── App.js
+├── components/                # Contains React components grouped by feature or functionality
+│   ├── admin/                 # Admin-specific components
+│   │   ├── AdminDashboard.jsx        # Main dashboard for admin users
+│   │   ├── CompanyManagement/        # Submodule for managing company-related features
+│   │   └── CommunicationMethods/     # Submodule for admin communication features
+│   ├── user/                  # User-specific components
+│   │   ├── UserDashboard.jsx         # Main dashboard for regular users
+│   │   ├── CalendarView.jsx          # Component for displaying a calendar view
+│   │   └── CompanyGrid.jsx           # Component for displaying company data in a grid
+│   └── shared/                # Shared components used across the application
+├── contexts/                  # Context API implementations for state management
+└── App.js                     # Entry point of the React application
+
 
 
 ## Setup Instructions
