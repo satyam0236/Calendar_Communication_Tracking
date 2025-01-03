@@ -84,8 +84,8 @@ const UserDashboard = () => {
       <div className="flex justify-between items-center">
         <div className="flex items-center space-x-4">
           <NotificationBadge
-            overdue={dueStatus.overdue.length}
-            dueToday={dueStatus.dueToday.length}
+            overdue={dueStatus.overdue}
+            dueToday={dueStatus.dueToday}
             onAcknowledgeAll={handleAcknowledgeAll}
           />
           <div className="relative">

@@ -168,13 +168,14 @@ Notes: ${comm.notes || 'No notes'}`}
             key={index}
             className={`bg-white min-h-[120px] p-2 ${
               date ? 'hover:bg-gray-50 cursor-pointer' : ''
-            }`}
+            } ${isToday(date) ? 'ring-2 ring-blue-500 ring-inset' : ''}`}
             onClick={() => handleDayClick(date)}
           >
             {date && (
               <>
                 <div className={`text-sm font-medium mb-1 ${
-                  isPastDate(date) ? 'text-gray-500' : 'text-gray-900'
+                  isPastDate(date) ? 'text-gray-500' :
+                  isToday(date) ? 'text-blue-600' : 'text-gray-900'
                 }`}>
                   {date.getDate()}
                 </div>

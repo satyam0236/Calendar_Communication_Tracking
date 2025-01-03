@@ -46,7 +46,7 @@ const NotificationBadge = ({ overdue, dueToday, onAcknowledgeAll }) => {
           <div className="p-4">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-lg font-medium">Notifications</h3>
-              {total > 0 && (
+              {/* {total > 0 && (
                 <button
                   onClick={() => {
                     onAcknowledgeAll();
@@ -56,7 +56,7 @@ const NotificationBadge = ({ overdue, dueToday, onAcknowledgeAll }) => {
                 >
                   Acknowledge All
                 </button>
-              )}
+              )} */}
             </div>
 
             {total === 0 ? (
