@@ -1,6 +1,73 @@
-# Getting Started with Create React App
+# Communication Calendar Application
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A React-based calendar application for tracking and managing company communications, featuring admin controls, user dashboard, and calendar views.
+
+## Project Overview
+
+This application serves as a centralized platform for maintaining professional relationships by tracking communications with other organizations. It enables efficient logging of past interactions, planning of future communications, and management of engagement frequencies based on predefined schedules.
+
+## Core Modules
+
+### 1. Admin Module
+
+#### Company Management
+- **Company Details:**
+  - Name
+  - Location
+  - LinkedIn Profile
+  - Emails
+  - Phone Numbers
+  - Comments
+  - Communication Periodicity
+
+#### Communication Method Management
+- **Method Configuration:**
+  - Name
+  - Description
+  - Sequence
+  - Mandatory Flag
+- **Default Methods (in order):**
+  1. LinkedIn Post
+  2. LinkedIn Message
+  3. Email
+  4. Phone Call
+  5. Other
+
+### 2. User Module
+
+#### Dashboard Features
+- Grid view of companies
+- Last five communications display
+- Next scheduled communication tracking
+- Color-coded highlights:
+  - Red: Overdue communications
+  - Yellow: Communications due today
+- Hover tooltips for communication details
+
+#### Communication Actions
+- Single/multi-company selection
+- Communication logging with:
+  - Type selection
+  - Date recording
+  - Notes addition
+- Status reset upon logging
+
+#### Notification System
+- Overdue communications grid
+- Today's communications grid
+- Notification badge with count
+
+#### Calendar View
+- Past communications display
+- Upcoming communications management
+- Interactive date selection
+
+### 3. Reporting and Analytics Module (Optional)
+- Communication frequency reports
+- Engagement effectiveness dashboard
+- Overdue communication trends
+- Downloadable reports (PDF/CSV)
+- Real-time activity log
 
 ## Available Scripts
 
@@ -8,63 +75,139 @@ In the project directory, you can run:
 
 ### `yarn start`
 
-Runs the app in the development mode.\
+Runs the app in development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
-
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
 
 ### `yarn test`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Launches the test runner in interactive watch mode.
 
 ### `yarn build`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Builds the app for production to the `build` folder.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Technical Stack
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+json
+{
+"dependencies": {
+"react": "^19.0.0",
+"react-dom": "^19.0.0",
+"react-router-dom": "^7.1.1",
+"chart.js": "^4.4.7",
+"react-chartjs-2": "^5.3.0",
+"@heroicons/react": "^2.2.0",
+"@mui/icons-material": "^6.3.0",
+"react-icons": "^5.4.0"
+}
+}
 
-### `yarn eject`
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## Project Structure
+src/
+├── components/
+│ ├── admin/
+│ │ ├── AdminDashboard.jsx
+│ │ ├── CompanyManagement/
+│ │ └── CommunicationMethods/
+│ ├── user/
+│ │ ├── UserDashboard.jsx
+│ │ ├── CalendarView.jsx
+│ │ └── CompanyGrid.jsx
+│ └── shared/
+├── contexts/
+└── App.js
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## Setup Instructions
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+1. Clone the repository
+2. Install dependencies:
+   ```bash
+   yarn install
+   ```
+3. Start the development server:
+   ```bash
+   yarn start
+   ```
 
-## Learn More
+## Testing & Validation
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- Application runs smoothly without errors
+- Comprehensive testing for performance and usability
+- Sample data provided for demonstration
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Evaluation Criteria
 
-### Code Splitting
+### Code Quality
+- Clean, maintainable code
+- Proper React patterns
+- Component design
+- State management
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### Functionality
+- Complete feature implementation
+- Proper communication handling
 
-### Analyzing the Bundle Size
+### User Experience
+- Intuitive navigation
+- Effective visual indicators
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+### Performance
+- Efficient data handling
+- Smooth operation
 
-### Making a Progressive Web App
+### Innovation
+- Enhanced features
+- Modern UI/UX design
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## Browser Support
 
-### Advanced Configuration
+json
+{
+"browserslist": {
+"production": [
+">0.2%",
+"not dead",
+"not op_mini all"
+],
+"development": [
+"last 1 chrome version",
+"last 1 firefox version",
+"last 1 safari version"
+]
+}
+}
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
 
-### Deployment
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## Development Dependencies
+json
+{
+"devDependencies": {
+"autoprefixer": "^10.4.20",
+"postcss": "^8.4.49",
+"tailwindcss": "^3.4.17"
+}
+}
 
-### `yarn build` fails to minify
+## Prerequisites
+- Node.js (version 16 or higher)
+- Yarn package manager
+- Modern web browser
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## Development Setup
+1. Clone the repository:
+   ```bash
+   git clone <repository-url>
+   cd communication-calendar
+   ```
+2. Create a .env file:
+   ```bash
+   REACT_APP_API_URL=your_api_url_here
+   ```
+
+   ## Deployment
+
+This application can be deployed on:
+- Netlify = https://satyam0236.netlify.app/admin
